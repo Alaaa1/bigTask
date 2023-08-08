@@ -17,6 +17,7 @@
     "@aws-sdk/lib-dynamodb": "^3.382.0",
     "@aws-sdk/types": "^3.378.0",
     "@middy/core": "^4.5.5",
+    "@middy/http-cors": "^4.5.5",
     "@middy/http-json-body-parser": "^4.5.5",
     "aws-sdk": "^2.1427.0",
     "serverless-iam-roles-per-function": "^3.2.0"

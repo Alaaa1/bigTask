@@ -15,10 +15,13 @@ createUser:
       Ref: MyAppDatabase
     SNS_ARN:
         Fn::ImportValue: MySNSTopicArn
+    ClientPool_ID:
+      Ref: myUserPoolClient
   events:
     - http:
         method: post
         path: /v1/users
+        cors: true
 
 uploadProfilePicture:
   handler: src/users/uploadProfilePicture/handler.default
@@ -35,6 +38,7 @@ uploadProfilePicture:
     - http:
         method: post
         path: /v1/users/uploadProfilePicture
+        cors: true
 
 deleteUser:
   handler: src/users/deleteUser/handler.default
@@ -53,6 +57,7 @@ deleteUser:
     - http:
         method: delete
         path: /v1/users
+        cors: true
 
 getUser:
   handler: src/users/getUser/handler.default
@@ -75,7 +80,8 @@ getUser:
   events:
     - http:
         method: get
-        path: /v1/users
+        path: /v1/users/{id}
+        cors: true
 
 updateUser:
   handler: src/users/updateUser/handler.default
@@ -98,3 +104,4 @@ updateUser:
     - http:
         method: put
         path: /v1/users
+        cors: true

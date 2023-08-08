@@ -40,7 +40,7 @@ Outputs:
           - emailNotificationQueue
           - Arn
     Export:
-      Name: myemailNotificationQueue
+      Name: emailNotificationQueue
       
   slackNotificationQueue:
     Value: 
@@ -48,4 +48,4 @@ Outputs:
           - slackNotificationQueue
           - Arn
     Export:
-      Name: myslackNotificationQueue
+      Name: slackNotificationQueue

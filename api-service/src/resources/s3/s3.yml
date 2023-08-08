@@ -6,6 +6,25 @@ Resources:
       PublicAccessBlockConfiguration:
         BlockPublicPolicy: false
         RestrictPublicBuckets: false
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - POST
+              - PUT
+              - HEAD
+              - DELETE
+            AllowedOrigins:
+              - '*'
+            ExposedHeaders:
+              - "x-amz-server-side-encryption"
+              - "x-amz-request-id"
+              - "x-amz-id-2"
+              - "ETag"
+            Id: myCORSRuleId1
+            MaxAge: 3600
 
 
   myS3BucketPolicy:
@@ -29,18 +48,3 @@ Resources:
               - 'arn:aws:s3:::${myS3Bucket}/*'
               - myS3Bucket:
                   Ref: myS3Bucket
-  # myS3BucketPolicy:
-  #   Type: AWS::s3::BucketPolicy
-  #   Properties:
-  #     PolicyDocument:
-  #       Statement:
-  #         - Effect: Allow
-  #           Principal: "*"
-  #           Action:
-  #             - s3:PutObject
-            # Resource:
-            #   Fn::sub:
-            #     - 'arn:aws:s3:::${myS3Bucket}/*'
-            #     - MyS3Bucket:
-            #         Ref: myS3Bucket
-  #     Bucket: api-service-pics-bucket

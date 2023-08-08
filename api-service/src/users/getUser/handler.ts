@@ -7,7 +7,8 @@ const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 const s3Client = new S3Client({});
 
-export default middyfy(async () => {
+export default middyfy(async (event) => {
+    const { id } = event.pathParameters;
     const command = new ScanCommand({
         TableName: process.env.TABLE_NAME!
     });
@@ -22,6 +23,11 @@ export default middyfy(async () => {
     const s3Object = await (await s3Client.send(s3Command)).Body?.transformToString();
 
     return {
+        headers: {
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "GET"
+        },
         statusCode: 200,
         body: JSON.stringify({ s3: s3Object, db: response.Items })
     }

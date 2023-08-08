@@ -1,13 +1,14 @@
 import { DynamoDBDocumentClient, PutCommand } from '@aws-sdk/lib-dynamodb';
 import { middyfy } from "@lib/middleware";
+import cors from '@middy/http-cors';
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { PublishCommand, SNSClient } from "@aws-sdk/client-sns";
-// import { CognitoIdentityProviderClient, SignUpCommand } from "@aws-sdk/client-cognito-identity-provider"
+import { CognitoIdentityProviderClient, SignUpCommand } from "@aws-sdk/client-cognito-identity-provider"
 
 const client = new DynamoDBClient({});
 const docClient = DynamoDBDocumentClient.from(client);
 const snsClient = new SNSClient({});
-// const cognitoClient = new CognitoIdentityProviderClient({});
+const cognitoClient = new CognitoIdentityProviderClient({});
 
 export default middyfy(async (event) => {
   const { name, email, password } = event.body;
@@ -27,16 +28,20 @@ export default middyfy(async (event) => {
     TopicArn: process.env.SNS_ARN!
   }))
 
-  // const signupCommand = new SignUpCommand({
-  //   ClientId: process.env.ClientPool_ID!,
-  //   Username: name,
-  //   Password: password,
-  // })
+  const signupCommand = new SignUpCommand({
+    ClientId: process.env.ClientPool_ID!,
+    Username: name,
+    Password: password,
+  })
 
-  // await cognitoClient.send(signupCommand);
+  await cognitoClient.send(signupCommand);
 
   return {
-    statusCode: 200,
-    body: "User Created Successfully!"
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      "Access-Control-Allow-Methods": "POST"
+    },
+    statusCode: 201,
+    body: JSON.stringify('User Created successfully!')
   }
-});
+}).use(cors());
