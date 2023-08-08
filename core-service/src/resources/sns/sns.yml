@@ -13,9 +13,7 @@ Resources:
           - MySNSTopic
           - TopicArn
       Endpoint: 
-        Fn::GetAtt:
-          - emailQueue
-          - Arn
+        Fn::ImportValue: myEmailNotificationQueue
       Protocol: sqs
 
       
@@ -27,9 +25,7 @@ Resources:
           - MySNSTopic
           - TopicArn
       Endpoint: 
-        Fn::GetAtt:
-          - slackQueue
-          - Arn
+        Fn::ImportValue: mySlackNotificationQueue
       Protocol: sqs
 
 Outputs:

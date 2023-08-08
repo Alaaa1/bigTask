@@ -1,15 +1,15 @@
 Resources:
-  emailQueue:
+  emailNotificationQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: "emailQueue"
+      QueueName: "emailNotificationQueue"
       VisibilityTimeout: 30
 
       
-  slackQueue:
+  slackNotificationQueue:
     Type: AWS::SQS::Queue
     Properties:
-      QueueName: "slackQueue"
+      QueueName: "slackNotificationQueue"
       VisibilityTimeout: 30
 
   mySqsQueuePolicy:
@@ -30,22 +30,22 @@ Resources:
               aws:SourceArn:
                 Fn::ImportValue: MySNSTopicArn
       Queues:
-        - Ref: emailQueue
-        - Ref: slackQueue
+        - Ref: emailNotificationQueue
+        - Ref: slackNotificationQueue
 
 Outputs:
-  emailQueue:
+  emailNotificationQueue:
     Value: 
       Fn::GetAtt:
-          - emailQueue
+          - emailNotificationQueue
           - Arn
     Export:
-      Name: myEmailQueue
+      Name: myemailNotificationQueue
       
-  slackQueue:
+  slackNotificationQueue:
     Value: 
       Fn::GetAtt:
-          - slackQueue
+          - slackNotificationQueue
           - Arn
     Export:
-      Name: mySlackQueue
+      Name: myslackNotificationQueue
