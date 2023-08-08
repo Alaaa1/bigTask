@@ -1,0 +1,42 @@
+Resources:
+  MySNSTopic:
+    Type: AWS::SNS::Topic
+    Properties: 
+      TopicName: "coreServiceTopic"
+
+
+  emailSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: 
+        Fn::GetAtt:
+          - MySNSTopic
+          - TopicArn
+      Endpoint: 
+        Fn::GetAtt:
+          - emailQueue
+          - Arn
+      Protocol: sqs
+
+      
+  slackSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: 
+        Fn::GetAtt:
+          - MySNSTopic
+          - TopicArn
+      Endpoint: 
+        Fn::GetAtt:
+          - slackQueue
+          - Arn
+      Protocol: sqs
+
+Outputs:
+  SnsTopicArn:
+    Value: 
+      Fn::GetAtt:
+          - MySNSTopic
+          - TopicArn
+    Export:
+      Name: MySNSTopicArn

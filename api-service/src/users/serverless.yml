@@ -1,0 +1,100 @@
+createUser:
+  handler: src/users/createUser/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - sns:Publish
+      Resource:
+        - Fn::GetAtt:
+          - MyAppDatabase
+          - Arn
+        - Fn::ImportValue: MySNSTopicArn
+  environment:
+    TABLE_NAME:
+      Ref: MyAppDatabase
+    SNS_ARN:
+        Fn::ImportValue: MySNSTopicArn
+  events:
+    - http:
+        method: post
+        path: /v1/users
+
+uploadProfilePicture:
+  handler: src/users/uploadProfilePicture/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+        - s3:PutObjectAcl
+      Resource:
+        - Fn::GetAtt:
+          - myS3Bucket
+          - Arn
+  events:
+    - http:
+        method: post
+        path: /v1/users/uploadProfilePicture
+
+deleteUser:
+  handler: src/users/deleteUser/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:DeleteItem
+      Resource:
+        Fn::GetAtt:
+          - MyAppDatabase
+          - Arn
+  environment:
+    TABLE_NAME:
+      Ref:  MyAppDatabase
+  events:
+    - http:
+        method: delete
+        path: /v1/users
+
+getUser:
+  handler: src/users/getUser/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Scan
+        - s3:GetObject
+        - s3:GetObjectAcl
+      Resource:
+        - Fn::GetAtt:
+          - MyAppDatabase
+          - Arn
+        - Fn::GetAtt:
+          - myS3Bucket
+          - Arn
+  environment:
+    TABLE_NAME:
+      Ref:  MyAppDatabase
+  events:
+    - http:
+        method: get
+        path: /v1/users
+
+updateUser:
+  handler: src/users/updateUser/handler.default
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:UpdateItem
+        - sns:Publish
+      Resource:
+        - Fn::GetAtt:
+          - MyAppDatabase
+          - Arn
+        - Fn::ImportValue: MySNSTopicArn
+  environment:
+    TABLE_NAME:
+      Ref:  MyAppDatabase
+    SNS_ARN:
+        Fn::ImportValue: MySNSTopicArn
+  events:
+    - http:
+        method: put
+        path: /v1/users

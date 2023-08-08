@@ -1,0 +1,46 @@
+Resources:
+  myS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties: 
+      BucketName: api-service-pics-bucket
+      PublicAccessBlockConfiguration:
+        BlockPublicPolicy: false
+        RestrictPublicBuckets: false
+
+
+  myS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: 
+        Ref: myS3Bucket
+      PolicyDocument:
+        Id: myS3BucketPolicy
+        Statement:
+        - Sid: Allow-lambda-PutObject
+          Effect: Allow
+          Principal: "*"
+          Action:
+          - s3:PutObject
+          - s3:PutObjectAcl
+          - s3:GetObject
+          - s3:GetObjectAcl
+          Resource:
+            Fn::Sub:
+              - 'arn:aws:s3:::${myS3Bucket}/*'
+              - myS3Bucket:
+                  Ref: myS3Bucket
+  # myS3BucketPolicy:
+  #   Type: AWS::s3::BucketPolicy
+  #   Properties:
+  #     PolicyDocument:
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal: "*"
+  #           Action:
+  #             - s3:PutObject
+            # Resource:
+            #   Fn::sub:
+            #     - 'arn:aws:s3:::${myS3Bucket}/*'
+            #     - MyS3Bucket:
+            #         Ref: myS3Bucket
+  #     Bucket: api-service-pics-bucket

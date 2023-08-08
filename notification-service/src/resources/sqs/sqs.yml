@@ -1,0 +1,51 @@
+Resources:
+  emailQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "emailQueue"
+      VisibilityTimeout: 30
+
+      
+  slackQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: "slackQueue"
+      VisibilityTimeout: 30
+
+  mySqsQueuePolicy:
+    Type: AWS::SQS::QueuePolicy
+    Properties:
+      PolicyDocument:
+        Id: mySqsQueuePolicy
+        Statement:
+        - Sid: Allow-sns-SendMessage
+          Effect: Allow
+          Principal: 
+            Service: sns.amazonaws.com
+          Action:
+          - sqs:SendMessage
+          Resource: "*"
+          Condition: 
+            ArnEquals:
+              aws:SourceArn:
+                Fn::ImportValue: MySNSTopicArn
+      Queues:
+        - Ref: emailQueue
+        - Ref: slackQueue
+
+Outputs:
+  emailQueue:
+    Value: 
+      Fn::GetAtt:
+          - emailQueue
+          - Arn
+    Export:
+      Name: myEmailQueue
+      
+  slackQueue:
+    Value: 
+      Fn::GetAtt:
+          - slackQueue
+          - Arn
+    Export:
+      Name: mySlackQueue
