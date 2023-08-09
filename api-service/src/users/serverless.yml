@@ -22,23 +22,7 @@ createUser:
         method: post
         path: /v1/users
         cors: true
-
-uploadProfilePicture:
-  handler: src/users/uploadProfilePicture/handler.default
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - s3:PutObject
-        - s3:PutObjectAcl
-      Resource:
-        - Fn::GetAtt:
-          - myS3Bucket
-          - Arn
-  events:
-    - http:
-        method: post
-        path: /v1/users/uploadProfilePicture
-        cors: true
+    
 
 deleteUser:
   handler: src/users/deleteUser/handler.default
@@ -64,15 +48,10 @@ getUser:
   iamRoleStatements:
     - Effect: Allow
       Action:
-        - dynamodb:Scan
-        - s3:GetObject
-        - s3:GetObjectAcl
+        - dynamodb:Query
       Resource:
         - Fn::GetAtt:
           - MyAppDatabase
-          - Arn
-        - Fn::GetAtt:
-          - myS3Bucket
           - Arn
   environment:
     TABLE_NAME:
@@ -81,6 +60,10 @@ getUser:
     - http:
         method: get
         path: /v1/users/{id}
+        authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId: 
+              Ref: myAuthorizer
         cors: true
 
 updateUser:

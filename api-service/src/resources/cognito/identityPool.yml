@@ -2,7 +2,7 @@ Resources:
   myIdentityPool:
     Type: AWS::Cognito::IdentityPool
     Properties: 
-      AllowUnauthenticatedIdentities: true
+      AllowUnauthenticatedIdentities: false
       CognitoIdentityProviders:
         - ClientId: 
             Ref: myUserPoolClient
@@ -43,6 +43,9 @@ Resources:
                 Action:
                   - s3:PutObject
                   - s3:PutObjectAcl
+                  - s3:GetObject
+                  - s3:GetObjectAcl
+                  # - dynamodb:Query
                 Resource: "*"
   
   # Assigns the roles to the Identity Pool
