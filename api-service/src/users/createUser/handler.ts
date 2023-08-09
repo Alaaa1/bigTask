@@ -25,6 +25,12 @@ export default middyfy(async (event) => {
 
   await snsClient.send(new PublishCommand({
     Message: "User Created!",
+    MessageAttributes: { // MessageAttributeMap
+      eventType: { // MessageAttributeValue
+        DataType: "String", // required
+        StringValue: "USER_CREATED",
+      },
+    },
     TopicArn: process.env.SNS_ARN!
   }))
 

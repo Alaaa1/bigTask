@@ -22,26 +22,6 @@ createUser:
         method: post
         path: /v1/users
         cors: true
-    
-
-deleteUser:
-  handler: src/users/deleteUser/handler.default
-  iamRoleStatements:
-    - Effect: Allow
-      Action:
-        - dynamodb:DeleteItem
-      Resource:
-        Fn::GetAtt:
-          - MyAppDatabase
-          - Arn
-  environment:
-    TABLE_NAME:
-      Ref:  MyAppDatabase
-  events:
-    - http:
-        method: delete
-        path: /v1/users
-        cors: true
 
 getUser:
   handler: src/users/getUser/handler.default
@@ -86,5 +66,9 @@ updateUser:
   events:
     - http:
         method: put
-        path: /v1/users
+        path: /v1/users/{id}
+        authorizer: 
+            type: COGNITO_USER_POOLS
+            authorizerId: 
+              Ref: myAuthorizer
         cors: true
